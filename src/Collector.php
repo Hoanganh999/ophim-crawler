@@ -21,7 +21,7 @@ class Collector
 
     public function get(): array
     {
-        $info = $this->payload['movie'] ?? [];
+        $info = $this->payload['movies'] ?? [];
         $episodes = $this->payload['episodes'] ?? [];
 
         $data = [
