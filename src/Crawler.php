@@ -21,7 +21,7 @@ class Crawler extends BaseCrawler
         $this->checkIsInExcludedList($payload);
 
         $movie = Movie::where('update_handler', static::class)
-            ->where('update_identity', $payload['movie']['_id'])
+            ->where('update_identity', $payload['movies']['_id'])
             ->first();
 
         if (!$this->hasChange($movie, md5($body)) && $this->forceUpdate == false) {
@@ -36,7 +36,7 @@ class Crawler extends BaseCrawler
         } else {
             $movie = Movie::create(array_merge($info, [
                 'update_handler' => static::class,
-                'update_identity' => $payload['movie']['_id'],
+                'update_identity' => $payload['movies']['_id'],
                 'update_checksum' => md5($body)
             ]));
         }
@@ -78,7 +78,7 @@ class Crawler extends BaseCrawler
         if (!in_array('actors', $this->fields)) return;
 
         $actors = [];
-        foreach ($payload['movie']['actor'] as $actor) {
+        foreach ($payload['movies']['actor'] as $actor) {
             if (!trim($actor)) continue;
             $actors[] = Actor::firstOrCreate(['name' => trim($actor)])->id;
         }
@@ -90,7 +90,7 @@ class Crawler extends BaseCrawler
         if (!in_array('directors', $this->fields)) return;
 
         $directors = [];
-        foreach ($payload['movie']['director'] as $director) {
+        foreach ($payload['movies']['director'] as $director) {
             if (!trim($director)) continue;
             $directors[] = Director::firstOrCreate(['name' => trim($director)])->id;
         }
@@ -101,12 +101,12 @@ class Crawler extends BaseCrawler
     {
         if (!in_array('categories', $this->fields)) return;
         $categories = [];
-        foreach ($payload['movie']['category'] as $category) {
+        foreach ($payload['movies']['category'] as $category) {
             if (!trim($category['name'])) continue;
             $categories[] = Category::firstOrCreate(['name' => trim($category['name'])])->id;
         }
-        if($payload['movie']['type'] === 'hoathinh') $categories[] = Category::firstOrCreate(['name' => 'Hoạt Hình'])->id;
-        if($payload['movie']['type'] === 'tvshows') $categories[] = Category::firstOrCreate(['name' => 'TV Shows'])->id;
+        if($payload['movies']['type'] === 'hoathinh') $categories[] = Category::firstOrCreate(['name' => 'Hoạt Hình'])->id;
+        if($payload['movies']['type'] === 'tvshows') $categories[] = Category::firstOrCreate(['name' => 'TV Shows'])->id;
         $movie->categories()->sync($categories);
     }
 
@@ -115,7 +115,7 @@ class Crawler extends BaseCrawler
         if (!in_array('regions', $this->fields)) return;
 
         $regions = [];
-        foreach ($payload['movie']['country'] as $region) {
+        foreach ($payload['movies']['country'] as $region) {
             if (!trim($region['name'])) continue;
             $regions[] = Region::firstOrCreate(['name' => trim($region['name'])])->id;
         }
