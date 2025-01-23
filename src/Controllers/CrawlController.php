@@ -28,7 +28,7 @@ class CrawlController extends CrudController
                 if (preg_match('/(.*?)(\/phim\/)(.*?)/', $link)) {
                     $link = sprintf('%s/phim/%s', config('ophim_crawler.domain', 'https://xxvnapi.com/api'), explode('phim/', $link)[1]);
                     $response = json_decode(file_get_contents($link), true);
-                    $data->push(collect($response['movie'])->only('name', 'slug')->toArray());
+                    $data->push(collect($response['movies'])->only('name', 'slug')->toArray());
                 } else {
                     for ($i = $request['from']; $i <= $request['to']; $i++) {
                         $response = json_decode(Http::timeout(30)->get($link, [
