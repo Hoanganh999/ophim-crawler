@@ -1,5 +1,5 @@
 {
-    "name": "vnxx/vnxx-crawler",
+    "name": "hoanganh/vnxx-crawler",
     "description": "vnxx crawler",
     "type": "package",
     "require": {
